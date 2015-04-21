@@ -1,0 +1,15 @@
+{
+  "name": "sudoku",
+  "description": "Simple Sudoku game",
+  "dependencies": {
+    "coffee-script": "1.8.x",
+    "css-pipeline": "0.2.x",
+    "jade": "1.x",
+    "lodash": "^3.7.0",
+    "marked": "0.3.x",
+    "roots": "^3.0.0",
+    "roots-browserify": "^0.3.2",
+    "stylus": "0.49.x",
+    "virtual-dom": "^2.0.1"
+  }
+}
