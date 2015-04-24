@@ -3,6 +3,7 @@ _ = require 'lodash'
 diff = require 'virtual-dom/diff'
 patch = require 'virtual-dom/patch'
 h = require 'virtual-dom/h'
+generatePuzzle = require './generatePuzzle.coffee'
 
 History = []
 
@@ -86,8 +87,12 @@ raiseEvent = (e) ->
       updated = updateState "selected", false, (sel) -> if _.matches(square)(sel) then [] else square
     when "clear"
       updated = updateState "board", true, () -> nums: [] for y in [0..8] for x in [0..8]
-    when "new" then null
+    when "new"
+      newPuzzle = generatePuzzle()
+      console.log newPuzzle
+      updated = updateState "board", true, () -> nums: [newPuzzle[x][y]] for y in [0..8] for x in [0..8]
     when "undo"
+      if History.length == 1 then break
       entry = History.pop()
       console.log entry
       updated = updateState entry.path, false, () -> entry.old
@@ -103,4 +108,4 @@ updateDom = (newState) ->
   tree = newTree
   window.localStorage.setItem("state", State)
 
-updateDom State
+raiseEvent type: "new"
