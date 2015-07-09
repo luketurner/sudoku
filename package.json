@@ -1,15 +1,36 @@
 {
   "name": "sudoku",
-  "description": "Simple Sudoku game",
+  "version": "0.5.0",
+  "description": "A simple sudoku game",
+  "repository": "https://github.com/luketurner/sudoku",
+  "author": "Luke Turner",
+  "license": "MIT",
+  "main": "src/index.coffee",
+  "scripts": {
+    "build": "gulp build",
+    "server": "gulp webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "coffee-script": "1.8.x",
-    "css-pipeline": "0.2.x",
-    "jade": "1.x",
-    "lodash": "^3.7.0",
-    "marked": "0.3.x",
-    "roots": "^3.0.0",
-    "roots-browserify": "^0.3.2",
-    "stylus": "0.49.x",
+    "gulp": "^3.9.0",
+    "immutable": "^3.7.4",
+    "lodash": "^3.9.3",
     "virtual-dom": "^2.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer-loader": "^1.2.0",
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.9.2",
+    "css-loader": "^0.14.3",
+    "file-loader": "^0.8.4",
+    "gulp": "^3.8.11",
+    "gulp-util": "^3.0.4",
+    "node-libs-browser": "^0.5.2",
+    "node-sass": "^3.1.2",
+    "sass-loader": "^1.0.2",
+    "style-loader": "^0.12.3",
+    "url-loader": "^0.5.6",
+    "webpack": "^1.9.10",
+    "webpack-dev-server": "^1.9.0"
   }
 }
