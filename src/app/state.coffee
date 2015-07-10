@@ -26,8 +26,9 @@
 
 ###
 
-Board = require '../game/board.coffee'
+Board = require '../board.coffee'
 
 State = module.exports =
   selected: null
   board: new Board
+  lockedSquares: []

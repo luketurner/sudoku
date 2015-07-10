@@ -1,5 +1,5 @@
 State = require './state.coffee'
-Board = require '../game/board.coffee'
+Board = require '../board.coffee'
 
 history = []
 History = module.exports = {}
@@ -11,6 +11,7 @@ History.service = (next) ->
       history.push
         selected: State.selected
         board: new Board State.board
+        lockedSquares: State.lockedSquares
     next(data)
 
 History.undo = () ->
