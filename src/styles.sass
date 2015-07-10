@@ -42,6 +42,7 @@ $fg-locked: $text-color
     text-align: center
 
   .sudoku-board
+    background-color: $border
     .square
       display: inline-flex
       align-items: center
@@ -50,20 +51,23 @@ $fg-locked: $text-color
       font: $sq-width/1.7 Calibri,Tahoma,Arial,sans
       background-color: $bg
       color: $fg
-      border: 1px solid $border
-      width: $sq-width
-      height: $sq-width
+      //border: 1px solid $border
+      width: $sq-width - 2px
+      height: $sq-width - 2px
       text-align: center
+      margin: 1px
       vertical-align: middle
       &:nth-child(9n+3), &:nth-child(9n+6)
-        border-right: 2px solid $border-dark
+        width: $sq-width - 3px
+        margin-right: 2px
       &:nth-child(0n+19), &:nth-child(0n+20), &:nth-child(0n+21),
       &:nth-child(0n+22), &:nth-child(0n+23), &:nth-child(0n+24),
       &:nth-child(0n+25), &:nth-child(0n+26), &:nth-child(0n+27),
       &:nth-child(0n+46), &:nth-child(0n+47), &:nth-child(0n+48),
       &:nth-child(0n+49), &:nth-child(0n+50), &:nth-child(0n+51),
       &:nth-child(0n+52), &:nth-child(0n+53), &:nth-child(0n+54)
-        border-bottom: 2px solid $border-dark
+        height: $sq-width - 3px
+        margin-bottom: 2px
       &.sel
         background-color: $bg-sel
       &.rel
@@ -96,14 +100,14 @@ $fg-locked: $text-color
         background-color: $bg-num-sel
 
 
-@media (min-width: 500px)
+@media (min-width: 495px)
   body
-    @include app(500px)
+    @include app(495px)
 
-@media (max-width: 500px) and (min-width: 400px)
+@media (max-width: 495px) and (min-width: 405px)
   body
-    @include app(400px)
+    @include app(405px)
 
-@media (max-width: 400px)
+@media (max-width: 405px)
   body
-    @include app(300px)
+    @include app(315px)
