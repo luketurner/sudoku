@@ -88,7 +88,7 @@ solve = (board) ->
         return false
   internalBoard
 
-generateNew: (min, max) ->
+generateNew = (min, max) ->
   if min > max then throw Error 'min > max when calling generateNew()'
   # Step 1: Generate a completely solved game board
   internalBoard = ("123456789" for [0..80])
@@ -103,7 +103,7 @@ generateNew: (min, max) ->
     if tmp[0] > numCleared then [numCleared, clearedBoard] = tmp
   clearedBoard
 
-isInvalid: (board, i) ->
+isInvalid = (board, i) ->
   if board[i].length isnt 1 then return false
   _.any peers[i], (j) => j isnt i and board[j] is board[i]
 
