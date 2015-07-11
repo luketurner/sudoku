@@ -16,7 +16,7 @@ module.exports = {
     entry: "./src/index.coffee",
     output: {
         path: path.join(__dirname, "dist"),
-        publicPath: "/dist/",
+        publicPath: "",
         filename: "main.js"
     },
     module: {
