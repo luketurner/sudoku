@@ -9,7 +9,7 @@ History = module.exports = {}
 load = (index) ->
   currentIndex = index
   state = history[index]
-  State.board = new Board state.board
+  State.board = _.clone state.board
   State.lockedSquares = _.clone state.lockedSquares
   State.selected = state.selected
 
@@ -20,8 +20,8 @@ History.service = (next) ->
       if currentIndex + 1 < history.length then history = history.slice(0, currentIndex + 1)
       history.push
         selected: State.selected
-        board: new Board State.board
-        lockedSquares: State.lockedSquares
+        board: _.clone State.board
+        lockedSquares: _.clone State.lockedSquares
       currentIndex = history.length - 1
 
 History.undo = -> if currentIndex > 0 then load(currentIndex - 1)

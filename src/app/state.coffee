@@ -26,9 +26,7 @@
 
 ###
 
-Board = require '../board.coffee'
-
 State = module.exports =
   selected: null
-  board: new Board
+  board: ("" for [0..80])
   lockedSquares: []

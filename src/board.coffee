@@ -3,13 +3,7 @@
   The board is represented as a flat array of 81 strings.
 ###
 
-_     = require 'lodash'
-
-class UnsolvableException
-  constructor: (message) ->
-    @name = 'UnsolvableException'
-    @message = message
-
+_ = require 'lodash'
 
 sameRow = (i, j) -> i // 9 is j // 9
 sameCol = (i, j) -> i % 9 == j % 9
@@ -33,12 +27,15 @@ generateUnits = () ->
         units[i][2].push(j)
   units
 
+peers = generatePeers()
+units = generateUnits()
+
 assign = (board, index, num) ->
   if not num in board[index] then return false
   board = _.clone board
   board[index] = num
   learnedPeers = []
-  for peerIndex in Board::peers[index]
+  for peerIndex in peers[index]
     if num in board[peerIndex]
       newPeer = board[peerIndex].replace(num, '')
       if newPeer.length is 0 then return false
@@ -71,7 +68,7 @@ clearSquares = (board, numToClear) ->
 # generateBoard does not backtrack beyond 1 step -- if it can't move forward it just quits.
 # Because it's very fast, and it will quit as soon as ti makes an invalid step,
 # we can get around this by just running it again and again until it works.
-# (see Board::generateNew() for an example of that)
+# (see generateNew() for an example of that)
 generateBoard = (board) ->
   if not _.any(board, (n) -> n.length > 1) then return board
   for index in _.shuffle([0..80])
@@ -91,54 +88,32 @@ solve = (board) ->
         return false
   internalBoard
 
+generateNew: (min, max) ->
+  if min > max then throw Error 'min > max when calling generateNew()'
+  # Step 1: Generate a completely solved game board
+  internalBoard = ("123456789" for [0..80])
+  newBoard = generateBoard(internalBoard) until newBoard # sometimes we generate 30+ boards until one is valid
+  # Step 2: Clear out digits, while maintaining solvability
+  maxToClear = 81 - min
+  minToClear = 81 - max
+  tries = 100
+  numCleared = 0
+  while numCleared < minToClear and tries--
+    tmp = clearSquares(newBoard, maxToClear)
+    if tmp[0] > numCleared then [numCleared, clearedBoard] = tmp
+  clearedBoard
 
-class Board extends Array
+isInvalid: (board, i) ->
+  if board[i].length isnt 1 then return false
+  _.any peers[i], (j) => j isnt i and board[j] is board[i]
+
+module.exports =
   sameRow: sameRow
   sameCol: sameCol
   sameSquare: sameSquare
   sameUnit: sameUnit
-  units: generateUnits()
-  peers: generatePeers()
-  constructor: (oldBoard) ->
-    @reset()
-    if oldBoard
-      @[i] = v for v, i in oldBoard
-
-  reset: () ->
-    @[i] = "" for x,i in this
-    @pop() while @length > 81
-    @push "" while @length < 81
-    this
-
-  solve: () ->
-    solved = solve(this)
-    if not solved then return false
-    @[i] = v for v, i in solved
-    this
-
-  # Generates a solvable game with numToPopulate squares already populated.
-  generateNew: (min, max) ->
-    if min > max then throw Error 'min > max when calling generateNew()'
-    # Step 1: Generate a completely solved game board
-    internalBoard = ("123456789" for [0..80])
-    newBoard = generateBoard(internalBoard) until newBoard # sometimes we generate 30+ boards until one is valid
-    # Step 2: Clear out digits, while maintaining solvability
-    maxToClear = 81 - min
-    minToClear = 81 - max
-    tries = 100
-    numCleared = 0
-    while numCleared < minToClear and tries--
-      tmp = clearSquares(newBoard, maxToClear)
-      if tmp[0] > numCleared then [numCleared, clearedBoard] = tmp
-    @[i] = v for v, i in clearedBoard
-
-  isInvalid: (i) ->
-    if @[i].length isnt 1 then return false
-    _.any @peers[i], (j) => j isnt i and @[j] is @[i]
-
-
-  # Convert these to new form
-  #moveInvalid: (i, inum) -> _.some this, (jnum, j) -> (inum is jnum) and (i isnt j) and sameUnit(i, j)
-  #moveValid: (i, inum) -> not @moveInvalid i, inum
-
-module.exports = Board
+  units: units
+  peers: peers
+  solve: solve
+  generateNew: generateNew
+  isInvalid: isInvalid

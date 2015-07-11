@@ -24,15 +24,15 @@ registerEvents = () ->
     State.selected = if State.selected is si then null else si
 
   Events.addHandler "game:clear", ->
-    State.board.reset()
+    State.board = ("" for [0..80])
     State.lockedSquares = []
 
   Events.addHandler "game:new", ->
-    State.board.generateNew(25, 30)
+    State.board = Board.generateNew(25, 30)
     State.lockedSquares = (i for v, i in State.board when v.length == 1)
 
   Events.addHandler "game:solve", ->
-    State.board.solve()
+    State.board = Board.solve(State.board)
     State.lockedSquares = (i for v, i in State.board when v.length == 1)
 
   Events.addHandler "game:undo", -> History.undo()
@@ -46,8 +46,8 @@ renderSquare = (val, index) ->
   classes = ".square"
   selected = State.selected
   if selected?
-    if index is selected then classes += ".sel" else if State.board.sameUnit(index, selected) then classes += ".rel"
-  if State.board.isInvalid(index) then classes += ".invalid"
+    if index is selected then classes += ".sel" else if Board.sameUnit(index, selected) then classes += ".rel"
+  if Board.isInvalid(State.board, index) then classes += ".invalid"
   if index in State.lockedSquares then classes += ".locked"
   h ".square-border", { onclick: -> Events.emit type: "game:square", value: index },
     h(classes,
