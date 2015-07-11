@@ -4,6 +4,7 @@ State   = require './state.coffee'
 Events  = require './events.coffee'
 History = require './history.coffee'
 Board   = require '../board.coffee'
+Timer   = require './timer.coffee'
 
 registeredEvents = false
 registerEvents = () ->
@@ -26,20 +27,24 @@ registerEvents = () ->
   Events.addHandler "game:clear", ->
     State.board = ("" for [0..80])
     State.lockedSquares = []
+    Timer.reset()
 
   Events.addHandler "game:new", ->
     State.board = Board.generateNew(25, 30)
     State.lockedSquares = (i for v, i in State.board when v.length == 1)
+    Timer.reset()
 
   Events.addHandler "game:solve", ->
     State.board = Board.solve(State.board)
     State.lockedSquares = (i for v, i in State.board when v.length == 1)
+    Timer.reset()
 
   Events.addHandler "game:undo", -> History.undo()
   Events.addHandler "game:redo", -> History.redo()
   Events.addHandler "game:undoAll", ->  History.undoAll()
   Events.addHandler "game:redoAll", -> History.redoAll()
 
+  Timer.start()
   Events.emit type: "game:new", historical: true
 
 renderSquare = (val, index) ->
@@ -68,7 +73,8 @@ infoText = () ->
   empty = 81 - (filled + guessed)
 
   [h "a", { href: "http://github.org/luketurner/sudoku" }, "sudoku v0.8.0"
-   h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"]
+   h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
+   h "div", ["elapsed ", h("span#game-timer", "00:00")]]
 
 
 doubleButton = (text, leftev, rightev, title, classes) ->

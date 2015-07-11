@@ -30,3 +30,4 @@ State = module.exports =
   selected: null
   board: ("" for [0..80])
   lockedSquares: []
+  elapsedTime: 0
