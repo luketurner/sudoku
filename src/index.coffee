@@ -4,6 +4,7 @@
 ###
 
 # Require CSS and other assets
+require './glyphs.css'
 require './styles.sass'
 
 # Require index.html

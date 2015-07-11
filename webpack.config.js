@@ -32,7 +32,7 @@ module.exports = {
             
             // Images, fonts, etc.
             { test: /\.(png|jpe?g|gif)$/,    loader: "url?limit=1000" },
-            { test: /\.(ttf|eof|svg|woff)$/, loader: "file" }
+            { test: /\.(ttf|eot|svg|woff)(\?.+)?$/, loader: "file" }
         ]
     },
     plugins: []

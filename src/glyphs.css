@@ -1,0 +1,10 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('glyphs/icomoon.eot?-wbjf2j');
+	src:url('glyphs/icomoon.eot?#iefix-wbjf2j') format('embedded-opentype'),
+		url('glyphs/icomoon.ttf?-wbjf2j') format('truetype'),
+		url('glyphs/icomoon.woff?-wbjf2j') format('woff'),
+		url('glyphs/icomoon.svg?-wbjf2j#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

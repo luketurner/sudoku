@@ -1,9 +1,3 @@
-@mixin centered()
-  position: absolute
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
-
 $text-color: rgb(75, 75, 75)
 $bg: #eee
 $bg-sel: rgb(240, 240, 210)
@@ -17,15 +11,53 @@ $border-dark: darken($border, 25%)
 $fg: rgb(75, 75, 200)
 $fg-locked: $text-color
 
+@mixin glyph-font()
+  font-family: 'icomoon'
+  speak: none
+  font-style: normal
+  font-weight: normal
+  font-variant: normal
+  text-transform: none
+  line-height: 1
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+.icon-undo:before
+  @include glyph-font
+  content: "\e600"
+.icon-redo:before
+  @include glyph-font
+  content: "\e601"
+.icon-link:before
+  @include glyph-font
+  content: "\e602"
+.icon-solve:before
+  @include glyph-font
+  content: "\e603"
+.icon-clear:before
+  @include glyph-font
+  content: "\e604"
+
 @mixin app($width)
   $sq-width: $width / 9
 
   #app
     width: $width
-    @include centered()
+    margin: $sq-width auto
     color: $text-color
-    font: 1.5em Arial
     font-weight: 400
+    font-family: Arial,sans-serif
+
+  a
+    text-decoration: none
+    color: inherit
+    font-weight: bold
+    &::after
+      @include glyph-font
+      font-size: 0.9em
+      content: " \e602"
 
   *
     box-sizing: border-box
@@ -33,21 +65,18 @@ $fg-locked: $text-color
   .menu
     height: $sq-width
     button
-      font: 15px Consolas,Inconsolata,Monaco,monospace
+      font-size: $sq-width/3
       width: $sq-width * 1.5
       height: $sq-width
+      color: lighten($text-color, 10%)
     .info
       display: inline-block
       text-align: center
-      font-size: 10px
+      font-size: $sq-width/5
       margin: 0
       width: $sq-width * 3
       height: $sq-width
-      line-height: 12px
-
-  h1
-    text-align: center
-    font-weight: 300
+      line-height: 1.5em
 
   button
     color: $text-color
@@ -59,44 +88,50 @@ $fg-locked: $text-color
     text-transform: uppercase
 
   .sudoku-board
-    background-color: $border
-    .square
+    .square-border
       display: inline-flex
-      align-items: center
-      justify-content: center
-      flex-wrap: wrap
-      font: $sq-width/1.7 Calibri,Tahoma,Arial,sans
-      background-color: $bg
-      color: $fg
-      //border: 1px solid $border
-      width: $sq-width - 2px
-      height: $sq-width - 2px
-      text-align: center
-      margin: 1px
+      background-color: $border
+      width: $sq-width
+      height: $sq-width
       vertical-align: middle
+      text-align: center
+      .square
+        font: $sq-width/1.7 Calibri,Tahoma,Arial,sans
+        display: inline-flex
+        align-items: center
+        justify-content: center
+        flex-wrap: wrap
+        background-color: $bg
+        color: $fg
+        width: $sq-width - 2
+        height: $sq-width - 2
+        margin: 1px
+        cursor: default
+        &.sel
+          background-color: $bg-sel
+        &.rel
+          background-color: $bg-rel
+        &.invalid
+          background-color: $bg-invalid
+        &.locked
+          color: $fg-locked
+        .mininum
+          font-size: $sq-width/4
+          width: $sq-width/3 - 1
+          height: $sq-width/3 - 1
       &:nth-child(9n+3), &:nth-child(9n+6)
-        width: $sq-width - 3px
-        margin-right: 2px
+        .square
+          width: $sq-width - 3
+          margin-right: 2px
       &:nth-child(0n+19), &:nth-child(0n+20), &:nth-child(0n+21),
       &:nth-child(0n+22), &:nth-child(0n+23), &:nth-child(0n+24),
       &:nth-child(0n+25), &:nth-child(0n+26), &:nth-child(0n+27),
       &:nth-child(0n+46), &:nth-child(0n+47), &:nth-child(0n+48),
       &:nth-child(0n+49), &:nth-child(0n+50), &:nth-child(0n+51),
       &:nth-child(0n+52), &:nth-child(0n+53), &:nth-child(0n+54)
-        height: $sq-width - 3px
-        margin-bottom: 2px
-      &.sel
-        background-color: $bg-sel
-      &.rel
-        background-color: $bg-rel
-      &.invalid
-        background-color: $bg-invalid
-      &.locked
-        color: $fg-locked
-      .mininum
-        font-size: $sq-width/4
-        width: $sq-width/3 - 1
-        height: $sq-width/3 - 1
+        .square
+          height: $sq-width - 3
+          margin-bottom: 2px
 
   .sudoku-nums
     .num
