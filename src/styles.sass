@@ -9,7 +9,7 @@ $bg: #eee
 $bg-sel: rgb(240, 240, 210)
 $bg-rel: darken($bg, 5%)
 $bg-invalid: pink
-$bg-num: lighten($bg, 10%)
+$bg-btn: lighten($bg, 10%)
 $bg-num-rel: lighten($bg-rel, 10%)
 $bg-num-sel: lighten($bg-sel, 5%)
 $border: #777
@@ -24,22 +24,39 @@ $fg-locked: $text-color
     width: $width
     @include centered()
     color: $text-color
+    font: 1.5em Arial
+    font-weight: 400
 
   *
     box-sizing: border-box
 
-  .info
-    text-align: center
-    font-size: 10px
-    margin: 0
-
   .menu
-    text-align: center
+    height: $sq-width
     button
-      margin: 0 2px
+      font: 15px Consolas,Inconsolata,Monaco,monospace
+      width: $sq-width * 1.5
+      height: $sq-width
+    .info
+      display: inline-block
+      text-align: center
+      font-size: 10px
+      margin: 0
+      width: $sq-width * 3
+      height: $sq-width
+      line-height: 12px
 
   h1
     text-align: center
+    font-weight: 300
+
+  button
+    color: $text-color
+    cursor: pointer
+    border: 1px solid $border
+    border-radius: 4px
+    background-color: $bg-btn
+    display: inline-block
+    text-transform: uppercase
 
   .sudoku-board
     background-color: $border
@@ -92,8 +109,6 @@ $fg-locked: $text-color
       width: $sq-width
       height: $sq-width
       padding: 0
-      background-color: $bg-num
-      border-color: $border
       &:hover
         background-color: $bg-num-rel
       &.sel

@@ -1,6 +1,0 @@
-{
-  "name": "sudoku",
-  "dependencies": {
-    "skeleton": "~2.0.4"
-  }
-}

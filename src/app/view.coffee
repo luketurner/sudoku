@@ -14,29 +14,33 @@ registerEvents = () ->
     si = State.selected
     board = State.board
     if si? and not (si in State.lockedSquares)
-      board[si] = if n in board[si] then board[si].replace(n, "") else board[si] + n
-
+      if n in board[si]
+        board[si] = if e.all then "" else board[si].replace(n, "")
+      else
+        board[si] = if e.all then "123456789" else board[si] + n
 
   Events.addHandler "game:square", (e) ->
     si = e.value
     State.selected = if State.selected is si then null else si
 
-  Events.addHandler "game:clear", (e) ->
+  Events.addHandler "game:clear", ->
     State.board.reset()
     State.lockedSquares = []
 
-  Events.addHandler "game:new", (e) ->
+  Events.addHandler "game:new", ->
     State.board.generateNew(25, 30)
     State.lockedSquares = (i for v, i in State.board when v.length == 1)
 
-  Events.addHandler "game:solve", (e) ->
+  Events.addHandler "game:solve", ->
     State.board.solve()
     State.lockedSquares = (i for v, i in State.board when v.length == 1)
 
-  Events.addHandler "game:undo", (e) ->
-    History.undo()
+  Events.addHandler "game:undo", -> History.undo()
+  Events.addHandler "game:redo", -> History.redo()
+  Events.addHandler "game:undoAll", ->  History.undoAll()
+  Events.addHandler "game:redoAll", -> History.redoAll()
 
-  Events.emit type: "game:new"
+  Events.emit type: "game:new", historical: true
 
 renderSquare = (val, index) ->
   classes = ".square"
@@ -51,18 +55,42 @@ renderSquare = (val, index) ->
 
 renderNum = (n) ->
   selected = if State.selected? then State.board[State.selected] else ""
-  el = "button.num"
+  classes = ".num"
   if n in selected
-    el += ".sel"
-  h el,
-    onclick: -> Events.emit type: "game:num", value: n, historical: true
-    n
+    classes += ".sel"
+  leftev = type: "game:num", value: n, historical: true
+  rightev = _.merge all: true, leftev
+  doubleButton n, leftev, rightev, n, classes
 
 infoText = () ->
   filled = (x for x in State.board when x.length == 1).length
   guessed = (x for x in State.board when x.length > 1).length
   empty = 81 - (filled + guessed)
-  "filled #{filled} / guessed #{guessed} / empty #{empty}"
+
+  h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
+
+
+doubleButton = (text, leftev, rightev, title, classes) ->
+  if typeof leftev is "string" then leftev = type: leftev
+  if typeof rightev is "string" then rightev = type: rightev
+  timeout = null
+  rightfn = ->
+    timeout = null
+    Events.emit rightev
+  attributes =
+    title: title ? ""
+    onmouseup: ->
+      if timeout isnt null
+        clearTimeout(timeout)
+        Events.emit leftev
+    onmousedown: (e) ->
+      if e.button is 2
+        e.preventDefault()
+        rightfn()
+      if e.button is 0
+        timeout = window.setTimeout rightfn, 1000
+    oncontextmenu: (e) -> e.preventDefault()
+  h("button" + (classes ? ""), attributes, text)
 
 module.exports =
   render: () ->
@@ -70,11 +98,11 @@ module.exports =
     h 'div#app', [
       h "h1", "Sudoku"
       h ".menu", [
-        h("button", { onclick: () -> Events.emit type: "game:undo" }, "Undo")
-        h("button", { onclick: () -> Events.emit type: "game:clear", historical: true }, "Clear")
-        h("button", { onclick: () -> Events.emit type: "game:new", historical: true }, "Generate")
-        h("button", { onclick: () -> Events.emit type: "game:solve", historical: true }, "Solve")]
-      h("p.info", infoText())
+        doubleButton "<-",  "game:undo",  "game:undoAll",   "undo / reset"
+        doubleButton "->",  "game:redo",  "game:redoAll", "redo / redo-all"
+        h ".info", infoText()
+        doubleButton "| |", { type: "game:new", historical: true }, { type: "game:clear", historical: true }, "new / clear"
+        doubleButton "|x|", { type: "game:solve", historical: true }, "game:hint",    "solve / hint"]
       h ".sudoku-board",
         renderSquare(val, i) for val, i in State.board
       h ".sudoku-nums",

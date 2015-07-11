@@ -4,8 +4,6 @@
 ###
 
 # Require CSS and other assets
-require '../bower_components/skeleton/css/normalize.css'
-require '../bower_components/skeleton/css/skeleton.css'
 require './styles.sass'
 
 # Require index.html
@@ -16,7 +14,6 @@ Renderer = require './app/renderer.coffee'
 Events   = require './app/events.coffee'
 Log      = require './app/log.coffee'
 History  = require './app/history.coffee'
-
 
 # Add needed services to event emitter before we start adding handlers.
 # Note that first-added is first-called on the request and last-called on the response.
