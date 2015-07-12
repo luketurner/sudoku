@@ -72,7 +72,7 @@ infoText = () ->
   guessed = (x for x in State.board when x.length > 1).length
   empty = 81 - (filled + guessed)
 
-  [h "a", { href: "http://github.org/luketurner/sudoku" }, "sudoku v0.8.0"
+  [h "a", { href: "http://github.org/luketurner/sudoku" }, "s\u03BCdoku v0.8.0"
    h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
    h "div", ["elapsed ", h("span#game-timer", "00:00")]]
 
@@ -108,7 +108,7 @@ module.exports =
         doubleButton "", "game:redo", "game:redoAll", "redo / redo-all", ".icon-redo"
         h ".info", infoText()
         doubleButton "", { type: "game:new", historical: true }, { type: "game:clear", historical: true }, "new / clear", ".icon-clear"
-        doubleButton "", { type: "game:solve", historical: true }, "game:hint",    "solve / hint", ".icon-solve"]
+        doubleButton "", "game:hint", { type: "game:solve", historical: true }, "hint / solve", ".icon-solve"]
       h ".sudoku-board",
         renderSquare(val, i) for val, i in State.board
       h ".sudoku-nums",
