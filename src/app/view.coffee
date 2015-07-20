@@ -3,13 +3,10 @@ h       = require 'virtual-dom/h'
 State   = require './state.coffee'
 Events  = require './events.coffee'
 History = require './history.coffee'
-Board   = require '../board.coffee'
+Board   = require './board.coffee'
 Timer   = require './timer.coffee'
 
-registeredEvents = false
 registerEvents = () ->
-  registeredEvents = true
-
   Events.addHandler "game:num", (e) ->
     n = e.value
     si = State.selected
@@ -44,9 +41,6 @@ registerEvents = () ->
   Events.addHandler "game:undoAll", ->  History.undoAll()
   Events.addHandler "game:redoAll", -> History.redoAll()
 
-  Timer.start()
-  Events.emit type: "game:new", historical: true
-
 renderSquare = (val, index) ->
   classes = ".square"
   selected = State.selected
@@ -74,9 +68,11 @@ infoText = () ->
 
   [h "a", { href: "http://github.org/luketurner/sudoku" }, "s\u03BCdoku v0.8.0"
    h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
-   h "div", ["elapsed ", h("span#game-timer", "00:00")]]
+   h "div", "elapsed #{Timer.displayText()}"]
 
-
+# Helper that creates a button which emits one event when left-clicked,
+# and a different event when right-clicked. Long-pressing the button
+# also emits the right-click event (for mobile clients).
 doubleButton = (text, leftev, rightev, title, classes) ->
   if typeof leftev is "string" then leftev = type: leftev
   if typeof rightev is "string" then rightev = type: rightev
@@ -100,8 +96,8 @@ doubleButton = (text, leftev, rightev, title, classes) ->
   h("button" + (classes ? ""), attributes, text)
 
 module.exports =
+  registerEvents: registerEvents
   render: () ->
-    registerEvents() if not registeredEvents
     h 'div#app', [
       h ".menu", [
         doubleButton "", "game:undo", "game:undoAll", "undo / reset", ".icon-undo"

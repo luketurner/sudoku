@@ -1,5 +1,5 @@
 ###
-  game/board - contains functions for dealing with the Sudoku board.
+  board - contains functions for dealing with the Sudoku board.
   The board is represented as a flat array of 81 strings.
 ###
 

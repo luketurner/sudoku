@@ -1,6 +1,5 @@
 _     = require 'lodash'
 State = require './state.coffee'
-Board = require '../board.coffee'
 
 history = []
 currentIndex = -1

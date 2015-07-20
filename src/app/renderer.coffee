@@ -35,14 +35,10 @@ renderScheduled = true
 oldVDom         = null
 parentNode      = null
 
-# TODO - this module needs to be reworked.
-
 Renderer.service = (next) ->
   (data) ->
-    #oldState = State.cursor().deref()
     next(data)
-    #newState = State.cursor().deref()
-    Renderer.render()
+    renderScheduled = true
 
 Renderer.render = () ->
   Log.debug "render triggered"
@@ -61,5 +57,4 @@ Renderer.loop = () ->
   if renderScheduled
     renderScheduled = false
     Renderer.render()
-  # TODO - re-enable the loop once we have DOM diffing in the service.
-  # requestAnimationFrame(Renderer.loop)
+  requestAnimationFrame(Renderer.loop)
