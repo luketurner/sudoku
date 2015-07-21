@@ -59,8 +59,20 @@ $fg-locked: $text-color
       font-size: 0.9em
       content: " \e602"
 
+  .clickable
+    font-weight: bold
+    cursor: pointer
+
   *
     box-sizing: border-box
+
+  input.micro
+    display: inline-block
+    font-size: inherit
+    width: 4em
+    border: 1px solid $border
+    border-radius: 3px
+    text-align: center
 
   .menu
     height: $sq-width
@@ -78,6 +90,12 @@ $fg-locked: $text-color
       width: $sq-width * 3
       height: $sq-width
       line-height: 1.5em
+      vertical-align: middle
+      &.one
+        padding: 1.5em 0
+      &.two
+        padding: 0.75em 0
+
 
   button
     color: $text-color

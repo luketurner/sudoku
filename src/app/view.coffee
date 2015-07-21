@@ -27,7 +27,9 @@ registerEvents = () ->
     Timer.reset()
 
   Events.addHandler "game:new", ->
-    State.board = Board.generateNew(25, 30)
+    min = State.squaresToGenerate
+    max = State.squaresToGenerate + 5
+    State.board = Board.generateNew(min, max)
     State.lockedSquares = (i for v, i in State.board when v.length == 1)
     Timer.reset()
 
@@ -38,8 +40,14 @@ registerEvents = () ->
 
   Events.addHandler "game:undo", -> History.undo()
   Events.addHandler "game:redo", -> History.redo()
-  Events.addHandler "game:undoAll", ->  History.undoAll()
+  Events.addHandler "game:undoAll", -> History.undoAll()
   Events.addHandler "game:redoAll", -> History.redoAll()
+  Events.addHandler "game:toolmenu", -> State.showExtraTools = not State.showExtraTools
+  Events.addHandler "game:genchanged", (e) -> State.squaresToGenerate = parseInt(e.value, 10)
+  Events.addHandler "game:clearstorage", ->
+    window.localStorage.clear()
+    Events.emit type: "game:clear"
+    History.clear()
 
 renderSquare = (val, index) ->
   classes = ".square"
@@ -61,14 +69,35 @@ renderNum = (n) ->
   rightev = _.merge all: true, leftev
   doubleButton n, leftev, rightev, n, classes
 
-infoText = () ->
+extraToolMenu = ->
   filled = (x for x in State.board when x.length == 1).length
   guessed = (x for x in State.board when x.length > 1).length
   empty = 81 - (filled + guessed)
+  h ".menu", [
+    h ".info.two", [
+      h "div", "#{History.length()} history entries"
+      h "div", h("span.clickable", { onclick: -> Events.emit type: "game:clearstorage" }, "clear local storage")]
+    h ".info", [
+      h "div", "copy url to save puzzles"
+      h "div", "hover over buttons for help"
+      h "a", { href: "https://github.com/luketurner/sudoku/issues" }, "bug reports or ideas?"]
+    h ".info.two", [
+      h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
+      h "div", [
+        "generate "
+        h "input.micro",
+          type: "number",
+          min: 25,
+          max: 75
+          value: State.squaresToGenerate,
+          onchange: (e) -> Events.emit type: "game:genchanged", value: e.target.value
+        " squares"]]]
 
-  [h "a", { href: "http://github.org/luketurner/sudoku" }, "s\u03BCdoku v0.8.0"
-   h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
-   h "div", ["elapsed ", h("span#game-timer", "00:00")]]
+infoText = ->
+  toolText = "#{if State.showExtraTools then "hide" else "show"} advanced tools"
+  [h "a", { href: "http://github.org/luketurner/sudoku" }, "s\u03BCdoku v1.0.0"
+   h "div", ["elapsed ", h("span#game-timer", "00:00")]
+   h "div", h("span.clickable", { onclick: -> Events.emit type: "game:toolmenu" }, toolText)]
 
 # Helper that creates a button which emits one event when left-clicked,
 # and a different event when right-clicked. Long-pressing the button
@@ -105,6 +134,7 @@ module.exports =
         h ".info", infoText()
         doubleButton "", { type: "game:new", historical: true }, { type: "game:clear", historical: true }, "new / clear", ".icon-clear"
         doubleButton "", "game:hint", { type: "game:solve", historical: true }, "hint / solve", ".icon-solve"]
+      extraToolMenu() if State.showExtraTools
       h ".sudoku-board",
         renderSquare(val, i) for val, i in State.board
       h ".sudoku-nums",

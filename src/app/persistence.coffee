@@ -18,10 +18,9 @@ Persistence = module.exports = {}
 Persistence.service = (next) ->
   (data) ->
     next(data)
-    if data.historical # Note: for now, only update URL with historical (i.e. important) changes.
-      stateJson = JSON.stringify State
-      location.hash = "#" + window.btoa encodeURIComponent stateJson
-      window.localStorage.setItem("state", stateJson)
+    stateJson = JSON.stringify State
+    location.hash = "#" + window.btoa encodeURIComponent stateJson
+    window.localStorage.setItem("state", stateJson)
 
 Persistence.loadState = ->
   try

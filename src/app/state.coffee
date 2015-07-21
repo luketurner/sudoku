@@ -8,3 +8,5 @@ State = module.exports =
   board: ("" for [0..80])
   lockedSquares: []
   elapsedTime: 0
+  showExtraTools: false
+  squaresToGenerate: 25

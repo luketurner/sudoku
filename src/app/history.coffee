@@ -49,7 +49,11 @@ History.loadFromStorage = ->
   catch
     false
 
+History.length = -> history.length
 History.undo = -> if currentIndex > 0 then load(currentIndex - 1)
 History.redo = -> if history.length > currentIndex + 1 then load(currentIndex + 1)
 History.undoAll = -> if currentIndex > 0 then load(0)
 History.redoAll = -> if history.length > currentIndex + 1 then load(history.length - 1)
+History.clear = ->
+  history = []
+  currentIndex = -1
