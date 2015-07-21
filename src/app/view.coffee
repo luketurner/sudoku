@@ -80,7 +80,7 @@ extraToolMenu = ->
     h ".info", [
       h "div", "copy url to save puzzles"
       h "div", "hover over buttons for help"
-      h "a", { href: "https://github.com/luketurner/sudoku/issues" }, "bug reports or ideas?"]
+      h "a", { href: "https://github.com/luketurner/sudoku/issues" }, "bug report / feedback"]
     h ".info.two", [
       h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
       h "div", [
