@@ -95,7 +95,7 @@ extraToolMenu = ->
 
 infoText = ->
   toolText = "#{if State.showExtraTools then "hide" else "show"} advanced tools"
-  [h "a", { href: "http://github.org/luketurner/sudoku" }, "s\u03BCdoku v1.0.0"
+  [h "a", { href: "http://github.org/luketurner/sudoku" }, "s\u03BCdoku v1.0.1"
    h "div", ["elapsed ", h("span#game-timer", "00:00")]
    h "div", h("span.clickable", { onclick: -> Events.emit type: "game:toolmenu" }, toolText)]
 
@@ -115,12 +115,13 @@ doubleButton = (text, leftev, rightev, title, classes) ->
       if timeout isnt null
         clearTimeout(timeout)
         Events.emit leftev
+      e.preventDefault()
     onmousedown: (e) ->
       if e.button is 2
-        e.preventDefault()
         rightfn()
       if e.button is 0
         timeout = window.setTimeout rightfn, 1000
+      e.preventDefault()
     oncontextmenu: (e) -> e.preventDefault()
   h("button" + (classes ? ""), attributes, text)
 
