@@ -16,7 +16,7 @@
 
 Log = module.exports = {}
 
-Log.logLevel = 1
+Log.logLevel = 2
 Log.prefix = "[app-log] "
 Log.levelNames = ["ERROR", "WARN", "info", "debug"]
 Log.logger = console

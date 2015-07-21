@@ -68,7 +68,7 @@ infoText = () ->
 
   [h "a", { href: "http://github.org/luketurner/sudoku" }, "s\u03BCdoku v0.8.0"
    h "div", "filled #{filled} / guessed #{guessed} / empty #{empty}"
-   h "div", "elapsed #{Timer.displayText()}"]
+   h "div", ["elapsed ", h("span#game-timer", "00:00")]]
 
 # Helper that creates a button which emits one event when left-clicked,
 # and a different event when right-clicked. Long-pressing the button
